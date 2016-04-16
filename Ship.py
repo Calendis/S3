@@ -1,14 +1,17 @@
-#Classes for the player's ship
+#Class for the player's ship
 import pygame
 from Weapon import *
 from ShipImages import *
 from WeaponImages import *
 from Power import PowerUp
+from time import time
+
 screen = pygame.display.set_mode()
 weapons = []
 
 class Ship(pygame.sprite.Sprite):
-	def __init__(self, x, y, xspeed, yspeed, maxspeed, shipimg, firing, xpowerup, ypowerup, isleft, isright, isdown, isup):
+	def __init__(self, x, y, xspeed, yspeed, maxspeed, shipimg, firing,
+		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, delay_time,fire_speed):
 		super().__init__()
 		self.x = x
 		self.y = y
@@ -23,14 +26,23 @@ class Ship(pygame.sprite.Sprite):
 		self.isright = False
 		self.isdown = False
 		self.isup = False
+		self.hp = 100
+		self.can_shoot = True
+		self.delay_time = 0
+		self.fire_speed = 0.3
 
 	def update(self):
 		screen.blit(self.shipimg,(self.x,self.y))
 		self.x += self.xspeed
 		self.y += self.yspeed
 		if self.firing == True:
-			my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
-			weapons.append(my_weapon)
+			if time() - self.delay_time >= self.fire_speed:
+				self.can_shoot = True
+			if self.can_shoot == True:
+				my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
+				weapons.append(my_weapon)
+				self.delay_time = time()
+				self.can_shoot = False
 
 	def repos(self):
 		self.shipimg = broadsword_centre_image
