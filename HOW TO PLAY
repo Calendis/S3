@@ -1,0 +1,6 @@
+MOVE: ARROW KEYS
+SHOOT: X
+
+To run:
+cd into the directory
+run 'python3 void.py'

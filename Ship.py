@@ -3,20 +3,23 @@ import pygame
 from Weapon import *
 from ShipImages import *
 from WeaponImages import *
+from ShipSoundLoader import *
 from Power import PowerUp
 from time import time
+from random import random
 
 screen = pygame.display.set_mode()
 weapons = []
 
 class Ship(pygame.sprite.Sprite):
 	def __init__(self, x, y, xspeed, yspeed, maxspeed, shipimg, firing,
-		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, delay_time,fire_speed):
+		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, time_elapser, fire_delay, overheat,
+		coolantbonus, powerleft, powermax):
 		super().__init__()
 		self.x = x
 		self.y = y
-		self.xspeed = 0
-		self.yspeed = 0
+		self.xspeed = 0.0
+		self.yspeed = 0.0
 		self.maxspeed = maxspeed
 		self.shipimg = shipimg
 		self.firing = firing
@@ -28,36 +31,77 @@ class Ship(pygame.sprite.Sprite):
 		self.isup = False
 		self.hp = 100
 		self.can_shoot = True
-		self.delay_time = 0
-		self.fire_speed = 0.3
+		self.time_elapser = 0
+		self.fire_delay = 0.3
+		self.overheat = 0
+		self.coolantbonus = 0
+		self.powerleft = 0
+		self.powermax = 1
 
 	def update(self):
 		screen.blit(self.shipimg,(self.x,self.y))
 		self.x += self.xspeed
 		self.y += self.yspeed
+		
 		if self.firing == True:
-			if time() - self.delay_time >= self.fire_speed:
+			self.fire()
+
+		if self.isup == True:
+			self.yspeed = -self.maxspeed
+		elif self.isup == False and self.isdown != True:
+			self.yspeed = 0
+		if self.isdown == True:
+			if self.y >= 560:
+				self.y -= self.maxspeed
+				self.isdown = False
+			self.yspeed = self.maxspeed
+		elif self.isdown == False and self.isup != True:
+			self.yspeed = 0
+		if self.isleft == True:
+			self.xspeed = -self.maxspeed
+			self.shipimg = broadsword_left_image
+		elif self.isleft == False and self.isright != True:
+			self.xspeed = 0
+		if self.isright == True:
+			self.xspeed = self.maxspeed
+			self.shipimg = broadsword_right_image
+		elif self.isright == False and self.isleft != True:
+			self.xspeed = 0
+
+		if self.overheat > 0:
+			self.overheat -= 0.07
+
+		self.x = round(self.x, 1)
+		self.y = round(self.y , 1)
+
+	def fire(self):
+		if time() - self.time_elapser >= self.fire_delay:
+			if self.overheat < 44:
 				self.can_shoot = True
-			if self.can_shoot == True:
-				my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
-				weapons.append(my_weapon)
-				self.delay_time = time()
-				self.can_shoot = False
+ 	
+		if self.can_shoot == True:
+			my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
+			laser1.play()
+			weapons.append(my_weapon)
+			self.overheat += 2 - self.coolantbonus
+			self.powerdrain()
+			self.time_elapser = time()
+			self.can_shoot = False
+
 
 	def repos(self):
 		self.shipimg = broadsword_centre_image
-		
-	def up(self):
-		self.yspeed = -self.maxspeed
-		isup = True
-	def down(self):
-		self.yspeed = self.maxspeed
-		isdown =  True
-	def left(self):
-		self.xspeed = -self.maxspeed
-		self.shipimg = broadsword_left_image
-		isleft =  True
-	def right(self):
-		self.xspeed = self.maxspeed
-		self.shipimg = broadsword_right_image
-		isright = True
+
+
+	def powerdrain(self):
+		if self.powerleft >= 1:
+			self.powerleft -= 1
+		elif self.powerleft < 1:
+			self.xpowerup = "none"
+			self.coolantbonus = 0
+			self.fire_delay = 0.3
+			self.powerleft = 0
+			self.powermax = 1
+
+	def die(self):
+		explosion0.play()
