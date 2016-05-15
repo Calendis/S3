@@ -15,3 +15,8 @@ swallow_left_image = pygame.image.load("img/ships/enemy/swallow/swallow_left.png
 cardinal_centre_image = pygame.image.load("img/ships/enemy/cardinal/cardinal_centre.png")
 cardinal_right_image = pygame.image.load("img/ships/enemy/cardinal/cardinal_right.png")
 cardinal_left_image = pygame.image.load("img/ships/enemy/cardinal/cardinal_left.png")
+
+#Crow
+crow_centre_image = pygame.image.load("img/ships/enemy/crow/crow_centre.png")
+crow_right_image = pygame.image.load("img/ships/enemy/crow/crow_right.png")
+crow_left_image = pygame.image.load("img/ships/enemy/crow/crow_left.png")

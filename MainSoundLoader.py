@@ -7,3 +7,8 @@ pygame.mixer.init()
 explosion1 = pygame.mixer.Sound("aud/explosion1.wav")
 power0 = pygame.mixer.Sound("aud/power0.wav")
 points0 = pygame.mixer.Sound("aud/points0.wav")
+damage0 = pygame.mixer.Sound("aud/damage0.wav")
+laser0 = pygame.mixer.Sound("aud/laser0.wav")
+
+music = pygame.mixer.music.load("aud/music.wav")
+pygame.mixer.music.play(-1)

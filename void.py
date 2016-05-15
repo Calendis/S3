@@ -1,9 +1,11 @@
 #Some basic pygame stuff
+import shelve
 import pygame
 from pygame.locals import *
 from random import randint
 from Ship import *
 from Weapon import *
+from EnemyWeapon import *
 from Power import *
 from Enemy import *
 from Coins import *
@@ -32,6 +34,12 @@ def togglepause():
 		paused = False
 	elif paused == False:
 		paused = True
+
+def highscore(hs_table, score):
+	if score >= hs_table:
+		hs_table = shelve.open("highscores.sav")
+		hs_table["highscore"] = score
+		hs_table.close()
 
 
 def colour_control(integer1):
@@ -80,7 +88,7 @@ def healthbar_metre_control(integer1):
 
 def ship_loader():
 	global my_ship
-	my_ship = Ship(screen_size[0]/2, screen_size[1]*0.6, None, None, 3.0, broadsword_centre_image,
+	my_ship = Ship(screen_size[0]/2, screen_size[1]*0.6, None, None, 3.0, 0, "shipimgs",
 		False, "xpow", "ypow", "l", "r", "d", "u", "hp", "can_shoot", "elapser", "fire_delay", "overheat",
 		"coolantbonus", "powerleft", "powermax")
 
@@ -95,10 +103,21 @@ def main():
 	powerups = []
 	enemies = []
 	swallows = []
+	crows = []
 	coins = []
+	enemyweapons = []
 
 	score = 0
+	try:
+		hs_table = shelve.open("highscores.sav")
+		hs_table = hs_table["highscore"]
+		print("The high score is "+str(hs_table))
+	except:
+		print("No highscores.")
+		hs_table = 0
+
 	scoretext=font.render("Score: "+str(score), 0,(160,160,160))
+	highscoretext = font.render("High Score: "+str(hs_table), 0,(255,0,0))
 
 	ship_loader()
 	
@@ -166,9 +185,13 @@ def main():
 			new_swallow = Swallow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
 			enemies.append(new_swallow)
 			swallows.append(new_swallow)
-		if randint(0,580) == 0:
+		if randint(0,1600) == 0:
 			new_cardinal = Cardinal(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
 			enemies.append(new_cardinal)
+		if randint(0,580) == 0:
+			new_crow = Crow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops", "mod")
+			enemies.append(new_crow)
+			crows.append(new_crow)
 
 		'''End of code that spawns in enemies'''
 
@@ -178,7 +201,7 @@ def main():
 			if stars[i][1] > screen_size[1]:
 				stars[i][1] = 0
 
-		powerupgen = randint(0,16383)
+		powerupgen = randint(0,16383)#Spawns in powerups
 		if powerupgen in range(0,3):
 			new_powerup = SinWave(randint(0,screen_size[0]), randint(0,screen_size[1]), randint(-2,2), randint(-2,2), 
 			"name", "img", "powspeed", "coolant", "duration", "imgcount", "imgs")
@@ -217,7 +240,7 @@ def main():
 					weapons.remove(laser)
 
 			for enemy in enemies:#This loop detects collisions between lasers and enemies
-				if laser.x - enemy.x in range(-16,32) and laser.y - enemy.y in range(-24,32):
+				if int(laser.x*10) - int(enemy.x*10) in range(-160,320) and int(laser.y*10) - int(enemy.y*10) in range(-240,320):
 					try:
 						weapons.remove(laser)
 					except:
@@ -225,6 +248,7 @@ def main():
 					else:
 						pass
 					enemy.hp -= 1
+					damage0.play()
 					if enemy.hp < 1:
 						explosion1.play()
 
@@ -242,7 +266,22 @@ def main():
 								new_CopperCoin = CopperCoin(enemy.x, enemy.y, random()*randint(-2,2), random()*randint(1,2), "coinimg", "imagecount", "imgs", "value")
 								coins.append(new_CopperCoin)
 						
+						try:
+							swallows.remove(enemy)
+						except:
+							pass
+						else:
+							pass
+
+						try:
+							crows.remove(enemy)
+						except:
+							pass
+						else:
+							pass
+
 						enemies.remove(enemy)
+						del(enemy)
 
 		for swallow in swallows:#This loop allows swallows to follow your x position
 			if swallow.y < my_ship.y - 16:
@@ -256,12 +295,41 @@ def main():
 		for enemy in enemies:#This loop detects collisions between enemies and the player
 			if enemy.x - my_ship.x in range(-32, 16) and enemy.y - my_ship.y in range(-32, 23):
 				my_ship.hp -= enemy.hp*10
-				explosion1.play()
-				enemies.remove(enemy)
+				enemy.hp -= my_ship.hp*10
+				if enemy.hp < 0:
+					explosion1.play()
+					enemies.remove(enemy)
+				else:
+					damage0.play()
+				
+				try:
+					crows.remove(enemy)
+				except:
+					pass
+				else:
+					pass
+
+				try:
+					swallows.remove(enemy)
+				except:
+					pass
+				else:
+					pass
+				
+				del(enemy)
 
 				if my_ship.hp < 0:
+					#Game over
 					my_ship.hp = -1
 					my_ship.die()
+					highscore(hs_table, score)
+
+		for new_crow in crows:#This loop allows crows to fire
+			if new_crow.y < my_ship.y:
+				if randint(0, 10) == 0:
+					new_enemyweapon = StreamG("speed", "weaponimg", new_crow.x, new_crow.y, "damage")
+					laser0.play()
+					enemyweapons.append(new_enemyweapon)
 
 		for coin in coins:#This loops detects collisions between coins and the player
 			if int(coin.x*10) - int(my_ship.x*10) in range(0, 320) and int(coin.y*10) - int(my_ship.y*10) in range(0,320):
@@ -269,6 +337,9 @@ def main():
 				#print("ship: " + str(my_ship.x)+", "+str(my_ship.y))
 				points0.play()
 				score += coin.value
+				if hs_table < score:
+					hs_table = score
+					highscoretext = font.render("High Score: "+str(hs_table), 0,(255,0,0))
 				scoretext=font.render("Score: "+str(score), 1,(160,160,160))
 				coins.remove(coin)
 			
@@ -296,6 +367,18 @@ def main():
 			if my_weapon.y < -20:#This conditional checks if a laser is off of the screen and deletes it
 				weapons.remove(my_weapon)
 				del(my_weapon)
+
+		for new_enemyweapon in enemyweapons:#draws enemy weapons and allows them to hit you
+			new_enemyweapon.update()
+			if int(new_enemyweapon.x*10) - int(my_ship.x*10) in range(0,240) and int(new_enemyweapon.y*10) - int(my_ship.y*10) in range(0,240):
+				my_ship.hp -= new_enemyweapon.damage
+				damage0.play()
+				enemyweapons.remove(new_enemyweapon)
+				if my_ship.hp < 0:
+					my_ship.die()
+					highscore(hs_table, score)
+			if new_enemyweapon.y > 700:
+				enemyweapons.remove(new_enemyweapon)
 		
 		for power_up in powerups:
 			power_up.update()
@@ -323,6 +406,9 @@ def main():
 
 		#Draws the score
 		screen.blit(scoretext, (300, 638))
+
+		#Draws the high score
+		screen.blit(highscoretext, (550,638))
 		
 		pygame.display.flip()
 		clock.tick(40)

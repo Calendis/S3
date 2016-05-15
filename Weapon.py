@@ -36,7 +36,7 @@ class Weapon(pygame.sprite.Sprite):
 class Stream(Weapon):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
 		super().__init__(speed, weaponimg, x, y, xpowerup, ypowerup)
-		self.speed = 20
+		self.speed = 20.0
 		self.weaponimg = stream_image
 		self.x += 11
 		self.y += -14

@@ -12,7 +12,7 @@ screen = pygame.display.set_mode()
 weapons = []
 
 class Ship(pygame.sprite.Sprite):
-	def __init__(self, x, y, xspeed, yspeed, maxspeed, shipimg, firing,
+	def __init__(self, x, y, xspeed, yspeed, maxspeed, imgplace, shipimgs, firing,
 		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, time_elapser, fire_delay, overheat,
 		coolantbonus, powerleft, powermax):
 		super().__init__()
@@ -21,7 +21,8 @@ class Ship(pygame.sprite.Sprite):
 		self.xspeed = 0.0
 		self.yspeed = 0.0
 		self.maxspeed = maxspeed
-		self.shipimg = shipimg
+		self.imgplace = 0
+		self.shipimgs = [broadsword_centre_image, broadsword_right_image, broadsword_left_image]
 		self.firing = firing
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
@@ -39,7 +40,7 @@ class Ship(pygame.sprite.Sprite):
 		self.powermax = 1
 
 	def update(self):
-		screen.blit(self.shipimg,(self.x,self.y))
+		screen.blit(self.shipimgs[self.imgplace],(self.x,self.y))
 		self.x += self.xspeed
 		self.y += self.yspeed
 		
@@ -59,12 +60,12 @@ class Ship(pygame.sprite.Sprite):
 			self.yspeed = 0
 		if self.isleft == True:
 			self.xspeed = -self.maxspeed
-			self.shipimg = broadsword_left_image
+			self.imgplace = 2
 		elif self.isleft == False and self.isright != True:
 			self.xspeed = 0
 		if self.isright == True:
 			self.xspeed = self.maxspeed
-			self.shipimg = broadsword_right_image
+			self.imgplace = 1
 		elif self.isright == False and self.isleft != True:
 			self.xspeed = 0
 
@@ -90,7 +91,7 @@ class Ship(pygame.sprite.Sprite):
 
 
 	def repos(self):
-		self.shipimg = broadsword_centre_image
+		self.imgplace = 0
 
 
 	def powerdrain(self):
@@ -105,3 +106,9 @@ class Ship(pygame.sprite.Sprite):
 
 	def die(self):
 		explosion0.play()
+		#self.overheat = 512
+		self.coolantbonus = -2
+		self.can_shoot = False
+		self.maxspeed = 0
+		self.shipimgs = [nothing_image,nothing_image,nothing_image]
+		self.y = -2000

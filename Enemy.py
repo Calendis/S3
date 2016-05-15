@@ -1,9 +1,9 @@
 #Classes for enemy ships
 import pygame
 from random import randint
-from WeaponImages import *
 from EnemyImages import *
-from math import sin
+from math import cos
+from math import tan
 screen = pygame.display.set_mode()
 
 class Enemy(pygame.sprite.Sprite):
@@ -78,20 +78,53 @@ class Cardinal(Enemy):
 		self.x = x
 		self.y = y
 		self.xspeed = 0
-		self.yspeed = 4
+		self.yspeed = 2
 		self.shipimg = [cardinal_centre_image, cardinal_right_image, cardinal_left_image]
 		self.imgno = 0
 		self.firing = False
-		self.hp = 6
+		self.hp = 20
+		self.points = 50
+		self.drops = 0.2
+
+	def update(self):
+		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
+		self.y += self.yspeed
+		if self.y > 700:
+			self.y = -32
+			self.x = randint(0, 700)
+
+
+class Crow(Enemy):
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops, mod):
+		super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
+		self.x = x
+		self.y = y
+		self.xspeed = 0
+		self.yspeed = 1.4
+		self.shipimg = [crow_centre_image, crow_right_image, crow_left_image]
+		self.imgno = 0
+		self.firing = False
+		self.hp = 1
 		self.points = 125
 		self.drops = 0.02
+
+		if randint(0,1) == 0:
+			self.mod = -1
+		else:
+			self.mod = 1
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
 		self.y += self.yspeed
 		self.x += self.xspeed
+
+		self.y = round(self.y, 1)
+
 		if self.y > 700:
 			self.y = -32
 			self.x = randint(0, 700)
 
-		self.xspeed = int(sin(self.y/100)*4)
+		self.xspeed = int(tan(cos(self.y/200))*self.mod)
+		if self.x < 16 or self.x > 694:
+			self.xspeed *= -1
+
