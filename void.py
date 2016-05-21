@@ -9,6 +9,7 @@ from EnemyWeapon import *
 from Power import *
 from Enemy import *
 from Coins import *
+from Formation import *
 
 from ShipImages import *
 from GuiImages import *
@@ -89,9 +90,8 @@ def healthbar_metre_control(integer1):
 def ship_loader():
 	global my_ship
 	my_ship = Ship(screen_size[0]/2, screen_size[1]*0.6, None, None, 3.0, 0, "shipimgs",
-		False, "xpow", "ypow", "l", "r", "d", "u", "hp", "can_shoot", "elapser", "fire_delay", "overheat",
+		False, "none", "ypow", "l", "r", "d", "u", "hp", "can_shoot", "elapser", "fire_delay", "overheat",
 		"coolantbonus", "powerleft", "powermax")
-
 
 def main():
 	done = False
@@ -111,9 +111,9 @@ def main():
 	try:
 		hs_table = shelve.open("highscores.sav")
 		hs_table = hs_table["highscore"]
-		print("The high score is "+str(hs_table))
+		#print("The high score is "+str(hs_table))
 	except:
-		print("No highscores.")
+		#print("No highscores.")
 		hs_table = 0
 
 	scoretext=font.render("Score: "+str(score), 0,(160,160,160))
@@ -150,7 +150,8 @@ def main():
 					if event.key == K_LEFT:
 						my_ship.isleft = True
 					if event.key == K_DOWN:
-						my_ship.isdown = True
+						if my_ship.y < 562:
+							my_ship.isdown = True
 					if event.key == K_UP:
 						my_ship.isup = True
 					if event.key == K_x:
@@ -178,7 +179,7 @@ def main():
 
 		'''Start of code that spawns in enemies'''
 
-		if randint(0,150) == 0:
+		'''if randint(0,150) == 0:
 			new_sparrow = Sparrow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
 			enemies.append(new_sparrow)
 		if randint(0,300) == 0:
@@ -191,7 +192,30 @@ def main():
 		if randint(0,580) == 0:
 			new_crow = Crow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops", "mod")
 			enemies.append(new_crow)
-			crows.append(new_crow)
+			crows.append(new_crow)'''
+
+		if randint(0,450) == 0:
+			new_basicline = BasicLine("types", "xoffset", "yoffset", "pos")
+			for i in range(len(new_basicline.types)):
+				new_formation_enemy = new_basicline.types[i](new_basicline.pos+new_basicline.xoffset[i]*i, -64+new_basicline.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+				enemies.append(new_formation_enemy)
+
+				if new_formation_enemy.__class__ == Swallow:
+					swallows.append(new_formation_enemy)
+				if new_formation_enemy.__class__ == Crow:
+					crows.append(new_formation_enemy)
+
+		if randint(0,1160) == 0:
+			new_doublecrow = DoubleCrow("types", "xoffset","yoffset","pos")
+			for i in range(len(new_doublecrow.types)):
+				new_formation_enemy = new_doublecrow.types[i](new_doublecrow.pos+new_doublecrow.xoffset[i]*i, -64+new_doublecrow.yoffset[i], "xspeed", "yspeed","img","imgno","fire","hp","formation","points","drops")
+				enemies.append(new_formation_enemy)
+
+				if new_formation_enemy.__class__ == Swallow:
+					swallows.append(new_formation_enemy)
+				if new_formation_enemy.__class__ == Crow:
+					crows.append(new_formation_enemy)
+
 
 		'''End of code that spawns in enemies'''
 
@@ -217,7 +241,7 @@ def main():
 
 
 		for power_up in powerups:#This for loop detects collisions between powerups and things
-			if my_ship.x - power_up.x in range(-32, 16) and my_ship.y - power_up.y in range(-32, 23):
+			if int(my_ship.x*10 - power_up.x*10) in range(-320, 160) and int(my_ship.y*10 - power_up.y*10) in range(-320, 230):
 				power0.play()
 				my_ship.xpowerup = power_up.name
 				my_ship.fire_delay = power_up.pow_speed
@@ -252,7 +276,7 @@ def main():
 					if enemy.hp < 1:
 						explosion1.play()
 
-						for i in range(int(enemy.points/(1/enemy.drops))):
+						for i in range(int(enemy.points/(1/enemy.drops)+enemy.formation)):
 							if randint(0,enemy.points) > 1000:
 								new_PlatinumCoin = PlatinumCoin(enemy.x, enemy.y, random()*randint(-2,2), random()*randint(1,2), "coinimg", "imagecount", "imgs", "value")
 								coins.append(new_PlatinumCoin)
@@ -293,7 +317,10 @@ def main():
 					swallow.repos()
 
 		for enemy in enemies:#This loop detects collisions between enemies and the player
-			if enemy.x - my_ship.x in range(-32, 16) and enemy.y - my_ship.y in range(-32, 23):
+			
+			#if int(coin.x*10) - int(my_ship.x*10) in range(0, 320) and int(coin.y*10) - int(my_ship.y*10) in range(0,320):
+			
+			if int(enemy.x*10) - int(my_ship.x*10) in range(-320, 320) and int(enemy.y*10) - int(my_ship.y*10) in range(-320, 320):
 				my_ship.hp -= enemy.hp*10
 				enemy.hp -= my_ship.hp*10
 				if enemy.hp < 0:

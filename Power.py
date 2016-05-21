@@ -26,7 +26,7 @@ class SinWave(PowerUp):
 		self.pow_speed = 0
 		self.imagecount = 0
 		self.images = sinwaveimgs
-		self.coolant = 1.2
+		self.coolant = 0.75
 		self.duration = 100
 
 	def update(self):
@@ -50,8 +50,8 @@ class Super(PowerUp):
 		self.pow_speed = 0
 		self.imagecount = 0
 		self.images = superimgs
-		self.coolant = 1.5
-		self.duration = 60
+		self.coolant = 0.7
+		self.duration = 45
 
 	def update(self):
 		self.imagecount += 1
@@ -73,7 +73,7 @@ class IceI(PowerUp):
 		self.pow_speed = 0.2
 		self.imagecount = 0
 		self.images = iceiimgs
-		self.coolant = 1.4
+		self.coolant = 0.15
 		self.duration = 1000
 
 	def update(self):

@@ -2,13 +2,13 @@
 import pygame
 from random import randint
 from EnemyImages import *
-from math import cos
 from math import tan
+from math import cos
 screen = pygame.display.set_mode()
 
 class Enemy(pygame.sprite.Sprite):
-	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops):
-		super().__init__()
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
+		#super().__init__()
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -17,12 +17,13 @@ class Enemy(pygame.sprite.Sprite):
 		self.imgno = 0
 		self.firing = firing
 		self.hp = hp
+		self.formation = formation
 		self.points = points
 		self.drops = drops
 
 class Sparrow(Enemy):
-	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops):
-		super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
+		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -31,6 +32,7 @@ class Sparrow(Enemy):
 		self.imgno = 0
 		self.firing = False
 		self.hp = 1
+		self.formation = True
 		self.points = 26
 		self.drops = 0.1
 
@@ -39,12 +41,16 @@ class Sparrow(Enemy):
 		self.y += self.yspeed
 		if self.y > 700:
 			self.y = -32
-			self.x = randint(0, 700)
+			self.x = randint(0, 980)
+			self.formation = False
+			
+		self.x = round(self.x,1)
+		self.y = round(self.y,1)
 		
 
 class Swallow(Enemy):
-	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops):
-		super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
+		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 3
@@ -53,6 +59,7 @@ class Swallow(Enemy):
 		self.imgno = 0
 		self.firing = False
 		self.hp = 2
+		self.formation = True
 		self.points = 40
 		self.drops = 0.1
 
@@ -61,7 +68,12 @@ class Swallow(Enemy):
 		self.y += self.yspeed
 		if self.y > 700:
 			self.y = -32
-			self.x = randint(0, 700)
+			self.x = randint(0, 980)
+			self.formation = False
+
+		self.x = round(self.x,1)
+		self.y = round(self.y,1)
+
 	def moveright(self):
 		self.imgno = 1
 		self.x += self.xspeed
@@ -73,8 +85,8 @@ class Swallow(Enemy):
 
 
 class Cardinal(Enemy):
-	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops):
-		super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
+		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -83,6 +95,7 @@ class Cardinal(Enemy):
 		self.imgno = 0
 		self.firing = False
 		self.hp = 20
+		self.formation = True
 		self.points = 50
 		self.drops = 0.2
 
@@ -91,12 +104,16 @@ class Cardinal(Enemy):
 		self.y += self.yspeed
 		if self.y > 700:
 			self.y = -32
-			self.x = randint(0, 700)
+			self.x = randint(0, 980)
+			self.formation = False
+
+		self.x = round(self.x,1)
+		self.y = round(self.y,1)
 
 
 class Crow(Enemy):
-	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops, mod):
-		super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
+	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
+		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -105,13 +122,15 @@ class Crow(Enemy):
 		self.imgno = 0
 		self.firing = False
 		self.hp = 1
-		self.points = 125
-		self.drops = 0.02
+		self.formation = True
+		self.points = 160
+		self.drops = 0.015
+		global mod
 
 		if randint(0,1) == 0:
-			self.mod = -1
+			mod = -1
 		else:
-			self.mod = 1
+			mod = 1
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -122,9 +141,13 @@ class Crow(Enemy):
 
 		if self.y > 700:
 			self.y = -32
-			self.x = randint(0, 700)
+			self.x = randint(0, 980)
+			self.formation = False
 
-		self.xspeed = int(tan(cos(self.y/200))*self.mod)
-		if self.x < 16 or self.x > 694:
-			self.xspeed *= -1
+		self.xspeed = int(tan(cos(self.y/200))*mod)*2
+		if self.x < 16 or self.x > 984:
+			self.xspeed = 0
+
+		self.x = round(self.x,1)
+		self.y = round(self.y,1)
 

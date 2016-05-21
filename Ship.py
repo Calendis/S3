@@ -18,8 +18,8 @@ class Ship(pygame.sprite.Sprite):
 		super().__init__()
 		self.x = x
 		self.y = y
-		self.xspeed = 0.0
-		self.yspeed = 0.0
+		self.xspeed = 0
+		self.yspeed = 0
 		self.maxspeed = maxspeed
 		self.imgplace = 0
 		self.shipimgs = [broadsword_centre_image, broadsword_right_image, broadsword_left_image]
@@ -52,8 +52,7 @@ class Ship(pygame.sprite.Sprite):
 		elif self.isup == False and self.isdown != True:
 			self.yspeed = 0
 		if self.isdown == True:
-			if self.y >= 560:
-				self.y -= self.maxspeed
+			if self.y >= 563:
 				self.isdown = False
 			self.yspeed = self.maxspeed
 		elif self.isdown == False and self.isup != True:
@@ -70,10 +69,10 @@ class Ship(pygame.sprite.Sprite):
 			self.xspeed = 0
 
 		if self.overheat > 0:
-			self.overheat -= 0.07
+			self.overheat -= 0.1 + self.coolantbonus
 
 		self.x = round(self.x, 1)
-		self.y = round(self.y , 1)
+		self.y = round(self.y, 1)
 
 	def fire(self):
 		if time() - self.time_elapser >= self.fire_delay:
@@ -84,7 +83,7 @@ class Ship(pygame.sprite.Sprite):
 			my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
 			laser1.play()
 			weapons.append(my_weapon)
-			self.overheat += 2 - self.coolantbonus
+			self.overheat += 2
 			self.powerdrain()
 			self.time_elapser = time()
 			self.can_shoot = False
@@ -96,18 +95,21 @@ class Ship(pygame.sprite.Sprite):
 
 	def powerdrain(self):
 		if self.powerleft >= 1:
-			self.powerleft -= 1
+				self.powerleft -= 1
+
 		elif self.powerleft < 1:
-			self.xpowerup = "none"
-			self.coolantbonus = 0
-			self.fire_delay = 0.3
-			self.powerleft = 0
-			self.powermax = 1
+			if self.xpowerup != "none":
+				depower0.play()
+				self.xpowerup = "none"
+				self.coolantbonus = 0
+				self.fire_delay = 0.3
+				self.powerleft = 0
+				self.powermax = 1
 
 	def die(self):
 		explosion0.play()
 		#self.overheat = 512
-		self.coolantbonus = -2
+		self.coolantbonus = -0.1
 		self.can_shoot = False
 		self.maxspeed = 0
 		self.shipimgs = [nothing_image,nothing_image,nothing_image]

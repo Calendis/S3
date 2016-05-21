@@ -48,6 +48,8 @@ class Stream(Weapon):
 		self.y -= self.speed
 		self.x = x_power_up(self.xpowerup, self.x, self.y)
 		self.y = y_power_up(self.ypowerup, self.x, self.y)
+		self.x = round(self.x, 1)
+		self.y = round(self.y, 1)
 
 class GBall(Weapon):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
