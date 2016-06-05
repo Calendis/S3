@@ -31,5 +31,8 @@ class DoubleCrow(Formation):
 		self.pos = randint(0,1000)
 
 class SingleCardinal(Formation):
-	def __init__(self, types, amount, xoffset, yoffset, pos):
-		pass
+	def __init__(self, types, xoffset, yoffset, pos):
+		self.types = [Cardinal]
+		self.xoffset = [0]
+		self.yoffset = [0]
+		self.pos = randint(0,1000)

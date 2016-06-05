@@ -216,6 +216,11 @@ def main():
 				if new_formation_enemy.__class__ == Crow:
 					crows.append(new_formation_enemy)
 
+		if randint(0,1600) == 0:
+			new_singlecardinal = SingleCardinal("types","xoffset","yoffset","pos")
+			for i in range(len(new_singlecardinal.types)):
+				new_formation_enemy = new_singlecardinal.types[i](new_singlecardinal.pos+new_singlecardinal.xoffset[i]*i, -64+new_singlecardinal.yoffset[i], "xspeed", "yspeed", "img","imgno","fire","hp","formation","points","drops")
+				enemies.append(new_formation_enemy)
 
 		'''End of code that spawns in enemies'''
 
@@ -359,6 +364,11 @@ def main():
 					enemyweapons.append(new_enemyweapon)
 
 		for coin in coins:#This loops detects collisions between coins and the player
+			if int(coin.x*10) - int(my_ship.x*10) in range(0, 425) and int(coin.y*10) - int(my_ship.y*10) in range(0,380):
+				coin.x -= (coin.x - my_ship.x)/20
+			if int(coin.x*10) - int(my_ship.x*10) in range(-269, 0) and int(coin.y*10) - int(my_ship.y*10) in range(0,380):
+				coin.x -= (coin.x-28 - my_ship.x)/20
+
 			if int(coin.x*10) - int(my_ship.x*10) in range(0, 320) and int(coin.y*10) - int(my_ship.y*10) in range(0,320):
 				#print("coin: " + str(coin.x)+", "+str(coin.y))
 				#print("ship: " + str(my_ship.x)+", "+str(my_ship.y))
