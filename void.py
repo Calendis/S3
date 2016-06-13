@@ -95,6 +95,7 @@ def ship_loader():
 
 def main():
 	done = False
+	menuscreen = True
 
 	global paused
 	paused = False
@@ -138,6 +139,15 @@ def main():
 		star_y = randint(0,screen_size[1])
 
 		stars.append([star_x,star_y])
+
+	'''while menuscreen:
+
+		#Drawing below
+		screen.fill((0,0,0))
+
+		pygame.display.flip()
+		clock.tick(40)'''
+		
 
 	while not done:
 		for event in pygame.event.get():
@@ -364,10 +374,14 @@ def main():
 					enemyweapons.append(new_enemyweapon)
 
 		for coin in coins:#This loops detects collisions between coins and the player
+			
+			#terrible coin magnet
+			'''
 			if int(coin.x*10) - int(my_ship.x*10) in range(0, 425) and int(coin.y*10) - int(my_ship.y*10) in range(0,380):
 				coin.x -= (coin.x - my_ship.x)/20
 			if int(coin.x*10) - int(my_ship.x*10) in range(-269, 0) and int(coin.y*10) - int(my_ship.y*10) in range(0,380):
 				coin.x -= (coin.x-28 - my_ship.x)/20
+				'''
 
 			if int(coin.x*10) - int(my_ship.x*10) in range(0, 320) and int(coin.y*10) - int(my_ship.y*10) in range(0,320):
 				#print("coin: " + str(coin.x)+", "+str(coin.y))
@@ -379,8 +393,6 @@ def main():
 					highscoretext = font.render("High Score: "+str(hs_table), 0,(255,0,0))
 				scoretext=font.render("Score: "+str(score), 1,(160,160,160))
 				coins.remove(coin)
-			
-
 
 		#Drawing Below
 		

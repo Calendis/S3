@@ -15,7 +15,6 @@ class Ship(pygame.sprite.Sprite):
 	def __init__(self, x, y, xspeed, yspeed, maxspeed, imgplace, shipimgs, firing,
 		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, time_elapser, fire_delay, overheat,
 		coolantbonus, powerleft, powermax):
-		super().__init__()
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -49,6 +48,8 @@ class Ship(pygame.sprite.Sprite):
 
 		if self.isup == True:
 			self.yspeed = -self.maxspeed
+			if self.y < 5:
+				self.isup = False
 		elif self.isup == False and self.isdown != True:
 			self.yspeed = 0
 		if self.isdown == True:
@@ -108,7 +109,7 @@ class Ship(pygame.sprite.Sprite):
 
 	def die(self):
 		explosion0.play()
-		#self.overheat = 512
+		self.overheat = 512
 		self.coolantbonus = -0.1
 		self.can_shoot = False
 		self.maxspeed = 0

@@ -8,7 +8,6 @@ screen = pygame.display.set_mode()
 
 class Enemy(pygame.sprite.Sprite):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
-		#super().__init__()
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -23,7 +22,6 @@ class Enemy(pygame.sprite.Sprite):
 
 class Sparrow(Enemy):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
-		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -50,7 +48,6 @@ class Sparrow(Enemy):
 
 class Swallow(Enemy):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
-		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 3
@@ -86,7 +83,6 @@ class Swallow(Enemy):
 
 class Cardinal(Enemy):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
-		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -113,7 +109,6 @@ class Cardinal(Enemy):
 
 class Crow(Enemy):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
-		#super().__init__(x, y, xspeed, yspeed, shipimg, imgno, firing, hp, points, drops)
 		self.x = x
 		self.y = y
 		self.xspeed = 0

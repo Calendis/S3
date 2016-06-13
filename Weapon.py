@@ -25,7 +25,6 @@ def y_power_up(ypowerup, x, y):
 
 class Weapon(pygame.sprite.Sprite):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
-		super().__init__()
 		self.speed = speed
 		self.weaponimg = weaponimg
 		self.x = x
@@ -35,11 +34,10 @@ class Weapon(pygame.sprite.Sprite):
 
 class Stream(Weapon):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
-		super().__init__(speed, weaponimg, x, y, xpowerup, ypowerup)
 		self.speed = 20.0
 		self.weaponimg = stream_image
-		self.x += 11
-		self.y += -14
+		self.x = x + 11
+		self.y = y -14
 		self.xpowerup = xpowerup
 		self. ypowerup = ypowerup
 
@@ -53,7 +51,6 @@ class Stream(Weapon):
 
 class GBall(Weapon):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
-		super().__init__(speed, weaponimg, x, y, xpowerup, ypowerup)
 		self.speed = 30
 		self.weaponimg = gball_image
 		self.x += 12

@@ -5,7 +5,6 @@ screen = pygame.display.set_mode()
 
 class PowerUp(pygame.sprite.Sprite):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration):
-		super().__init__()
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -16,7 +15,6 @@ class PowerUp(pygame.sprite.Sprite):
 
 class SinWave(PowerUp):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration, imagecount, images):
-		super().__init__(x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -40,7 +38,6 @@ class SinWave(PowerUp):
 
 class Super(PowerUp):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration, imagecount, images):
-		super().__init__(x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -63,7 +60,6 @@ class Super(PowerUp):
 
 class IceI(PowerUp):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration, imagecount, images):
-		super().__init__(x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed

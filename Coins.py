@@ -18,7 +18,6 @@ class Coin(pygame.sprite.Sprite):
 
 class PlatinumCoin(Coin):
 	def __init__(self, x, y, xspeed, yspeed, coinimg, imagecount, imgs, value):
-		#super().__init__(x, y, xspeed, yspeed, coinimg, imagecount, imgs, value)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -51,7 +50,6 @@ class PlatinumCoin(Coin):
 
 class GoldCoin(Coin):
 	def __init__(self, x, y, xspeed, yspeed, coinimg, imagecount, imgs, value):
-		#super().__init__(x, y, xspeed, yspeed, coinimg, imagecount, imgs, value)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -84,7 +82,6 @@ class GoldCoin(Coin):
 
 class SilverCoin(Coin):
 	def __init__(self, x, y, xspeed, yspeed, coinimg, imagecount, imgs, value):
-		super().__init__(x, y, xspeed, yspeed, coinimg, imagecount, imgs, value)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
@@ -117,7 +114,6 @@ class SilverCoin(Coin):
 
 class CopperCoin(Coin):
 	def __init__(self, x, y, xspeed, yspeed, coinimg, imagecount, imgs, value):
-		super().__init__(x, y, xspeed, yspeed, coinimg, imagecount, imgs, value)
 		self.x = x
 		self.y = y
 		self.xspeed = xspeed
