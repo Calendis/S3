@@ -1,0 +1,13 @@
+#Script for setting score levels where new formations spawn
+
+LEVEL1 = 6
+LEVEL2 = 100
+LEVEL3 = 500
+LEVEL4 = 1000
+LEVEL5 = 3500
+LEVEL6 = 4500
+LEVEL7 = 5500
+LEVEL8 = 6500
+LEVEL9 = 7500
+LEVEL10 = 9000
+LEVEL11 = 10000

@@ -38,8 +38,8 @@ class PlatinumCoin(Coin):
 		if self.x < 0 or self.x > 993:
 			self.xspeed *= -1
 
-		'''if self.y < 0 or self.y > 600:
-			self.yspeed *= -1'''
+		if self.y < 0 or self.y > 598:
+			self.yspeed *= -1
 
 		self.x += self.xspeed
 		self.y += self.yspeed
@@ -67,10 +67,10 @@ class GoldCoin(Coin):
 			self.imagecount = 0
 
 		
-		if self.x < 0 or self.x > 993:
+		'''if self.x < 0 or self.x > 993:
 			self.xspeed *= -1
 
-		'''if self.y < 0 or self.y > 600:
+		if self.y < 0 or self.y > 600:
 			self.yspeed *= -1'''
 
 		self.x += self.xspeed
@@ -99,10 +99,10 @@ class SilverCoin(Coin):
 			self.imagecount = 0
 
 		
-		if self.x < 0 or self.x > 993:
+		'''if self.x < 0 or self.x > 993:
 			self.xspeed *= -1
 
-		'''if self.y < 0 or self.y > 600:
+		if self.y < 0 or self.y > 600:
 			self.yspeed *= -1'''
 
 		self.x += self.xspeed
@@ -131,10 +131,10 @@ class CopperCoin(Coin):
 			self.imagecount = 0
 
 		
-		if self.x < 0 or self.x > 993:
+		'''if self.x < 0 or self.x > 993:
 			self.xspeed *= -1
 
-		'''if self.y < 0 or self.y > 600:
+		if self.y < 0 or self.y > 600:
 			self.yspeed *= -1'''
 
 		self.x += self.xspeed

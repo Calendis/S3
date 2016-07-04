@@ -14,7 +14,7 @@ weapons = []
 class Ship(pygame.sprite.Sprite):
 	def __init__(self, x, y, xspeed, yspeed, maxspeed, imgplace, shipimgs, firing,
 		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, time_elapser, fire_delay, overheat,
-		coolantbonus, powerleft, powermax):
+		coolantbonus, powerleft, powermax, upgrades, lasertype, backfire):
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -37,6 +37,9 @@ class Ship(pygame.sprite.Sprite):
 		self.coolantbonus = 0
 		self.powerleft = 0
 		self.powermax = 1
+		self.upgrades = []
+		self.lasertype = lasertype
+		self.backfire = False
 
 	def update(self):
 		screen.blit(self.shipimgs[self.imgplace],(self.x,self.y))
@@ -75,15 +78,27 @@ class Ship(pygame.sprite.Sprite):
 		self.x = round(self.x, 1)
 		self.y = round(self.y, 1)
 
+		for upgrade in self.upgrades:
+			if upgrade == "damage0":
+				self.lasertype = RedStream
+			if upgrade == "backfire":
+				self.backfire = True
+
+
 	def fire(self):
 		if time() - self.time_elapser >= self.fire_delay:
 			if self.overheat < 44:
 				self.can_shoot = True
  	
 		if self.can_shoot == True:
-			my_weapon = Stream(0,0,self.x,self.y, self.xpowerup, self.ypowerup)
+			my_weapon = self.lasertype(0,0,self.x,self.y, self.xpowerup, self.ypowerup, "damage")
 			laser1.play()
 			weapons.append(my_weapon)
+			if self.backfire == True:
+				my_weapon_back = self.lasertype("speed", "weaponimg",self.x, self.y, self.xpowerup, self.ypowerup, "damage")
+				my_weapon_back.speed *= -1
+				my_weapon_back.y += 42
+				weapons.append(my_weapon_back)
 			self.overheat += 2
 			self.powerdrain()
 			self.time_elapser = time()
@@ -109,7 +124,7 @@ class Ship(pygame.sprite.Sprite):
 
 	def die(self):
 		explosion0.play()
-		self.overheat = 512
+		self.overheat = 44	
 		self.coolantbonus = -0.1
 		self.can_shoot = False
 		self.maxspeed = 0

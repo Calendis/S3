@@ -20,3 +20,19 @@ cardinal_left_image = pygame.image.load("img/ships/enemy/cardinal/cardinal_left.
 crow_centre_image = pygame.image.load("img/ships/enemy/crow/crow_centre.png")
 crow_right_image = pygame.image.load("img/ships/enemy/crow/crow_right.png")
 crow_left_image = pygame.image.load("img/ships/enemy/crow/crow_left.png")
+
+#Bluebird
+bluebird_centre_image = pygame.image.load("img/ships/enemy/bluebird/bluebird_centre.png")
+bluebird_right_image = pygame.image.load("img/ships/enemy/bluebird/bluebird_right.png")
+bluebird_left_image = pygame.image.load("img/ships/enemy/bluebird/bluebird_left.png")
+
+#Hawk
+hawk_centre_image = pygame.image.load("img/ships/enemy/hawk/hawk_centre.png")
+
+#Swallow MkII
+swallowmkii_centre_image = pygame.image.load("img/ships/enemy/swallowmkii/swallowmkii_centre.png")
+swallowmkii_right_image = pygame.image.load("img/ships/enemy/swallowmkii/swallowmkii_right.png")
+swallowmkii_left_image = pygame.image.load("img/ships/enemy/swallowmkii/swallowmkii_left.png")
+
+#Ring Boss
+ring_image = pygame.image.load("img/ships/enemy/ring/ring.png")

@@ -35,6 +35,12 @@ class SinWave(PowerUp):
 		self.x += self.xspeed
 		self.y += self.yspeed
 
+		if self.x < 0 or self.x > 993:
+			self.xspeed *= -1
+
+		if self.y < 0 or self.y > 598:
+			self.yspeed *= -1
+
 
 class Super(PowerUp):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration, imagecount, images):
@@ -58,6 +64,12 @@ class Super(PowerUp):
 		self.x += self.xspeed
 		self.y += self.yspeed
 
+		if self.x < 0 or self.x > 993:
+			self.xspeed *= -1
+
+		if self.y < 0 or self.y > 598:
+			self.yspeed *= -1
+
 class IceI(PowerUp):
 	def __init__(self, x, y, xspeed, yspeed, name, powimg, pow_speed, coolant, duration, imagecount, images):
 		self.x = x
@@ -70,7 +82,7 @@ class IceI(PowerUp):
 		self.imagecount = 0
 		self.images = iceiimgs
 		self.coolant = 0.15
-		self.duration = 1000
+		self.duration = 500
 
 	def update(self):
 		self.imagecount += 0.25
@@ -79,3 +91,9 @@ class IceI(PowerUp):
 		screen.blit(self.images[int(self.imagecount)],(self.x, self.y))
 		self.x += self.xspeed
 		self.y += self.yspeed
+
+		if self.x < 0 or self.x > 993:
+			self.xspeed *= -1
+
+		if self.y < 0 or self.y > 598:
+			self.yspeed *= -1

@@ -24,22 +24,24 @@ def y_power_up(ypowerup, x, y):
 	return y
 
 class Weapon(pygame.sprite.Sprite):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
+	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
 		self.speed = speed
 		self.weaponimg = weaponimg
 		self.x = x
 		self.y = y
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
+		self.damage = damage
 
 class Stream(Weapon):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
+	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
 		self.speed = 20.0
 		self.weaponimg = stream_image
 		self.x = x + 11
 		self.y = y -14
 		self.xpowerup = xpowerup
-		self. ypowerup = ypowerup
+		self.ypowerup = ypowerup
+		self.damage = 1
 
 	def update(self):
 		screen.blit(self.weaponimg,(self.x, self.y))
@@ -50,13 +52,14 @@ class Stream(Weapon):
 		self.y = round(self.y, 1)
 
 class GBall(Weapon):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup):
-		self.speed = 30
+	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
+		self.speed = 30.0
 		self.weaponimg = gball_image
-		self.x += 12
-		self.y += -10
+		self.x = x + 12
+		self.y = y - 10
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
+		self.damage = 1
 
 	def update(self):
 		screen.blit(self.weaponimg,(self.x, self.y))
@@ -64,3 +67,23 @@ class GBall(Weapon):
 		self.x -= int(sin(self.y)*10)
 		self.x = x_power_up(self.xpowerup, self.x, self.y)
 		self.y = y_power_up(self.ypowerup, self.x, self.y)
+		self.x = round(self.x, 1)
+		self.y = round(self.y, 1)
+
+class RedStream(Weapon):
+	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
+		self.speed = 21.0
+		self.weaponimg = redstream_image
+		self.x = x + 11
+		self.y = y -14
+		self.xpowerup = xpowerup
+		self.ypowerup = ypowerup
+		self.damage = 2
+
+	def update(self):
+		screen.blit(self.weaponimg, (self.x, self.y))
+		self.y -= self.speed
+		self.x = x_power_up(self.xpowerup, self.x, self.y)
+		self.y = y_power_up(self.ypowerup, self.x, self.y)
+		self.x = round(self.x, 1)
+		self.y = round(self.y, 1)

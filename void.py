@@ -10,9 +10,13 @@ from Power import *
 from Enemy import *
 from Coins import *
 from Formation import *
+from Upgrade import *
+
+from SpawnHelper import *
 
 from ShipImages import *
 from GuiImages import *
+from Button import *
 
 from MainSoundLoader import *
 
@@ -91,7 +95,7 @@ def ship_loader():
 	global my_ship
 	my_ship = Ship(screen_size[0]/2, screen_size[1]*0.6, None, None, 3.0, 0, "shipimgs",
 		False, "none", "ypow", "l", "r", "d", "u", "hp", "can_shoot", "elapser", "fire_delay", "overheat",
-		"coolantbonus", "powerleft", "powermax")
+		"coolantbonus", "powerleft", "powermax", "upgrades", Stream, "backfire")
 
 def main():
 	done = False
@@ -100,13 +104,20 @@ def main():
 	global paused
 	paused = False
 
+	level0boss = False
+
 	stars = []
 	powerups = []
+	upgrades = []
 	enemies = []
 	swallows = []
 	crows = []
 	coins = []
 	enemyweapons = []
+	buttons = []
+
+	play_button = PlayButton(100, 200, "images", "img_count", "hovered")
+	buttons.append(play_button)
 
 	score = 0
 	try:
@@ -121,7 +132,7 @@ def main():
 	highscoretext = font.render("High Score: "+str(hs_table), 0,(255,0,0))
 
 	ship_loader()
-	
+
 	starcount = 1000
 
 	global barlength
@@ -140,16 +151,33 @@ def main():
 
 		stars.append([star_x,star_y])
 
-	'''while menuscreen:
+	while menuscreen and not done:
+		for event in pygame.event.get():
+			#Event Listeners
+			if event.type == pygame.QUIT:
+				done = True
+			if event.type == MOUSEBUTTONDOWN:
+				for button in buttons:
+					if button.hovered == True:
+						button.when_clicked()
+
+						if button.__class__ == PlayButton:
+							menuscreen = False
 
 		#Drawing below
 		screen.fill((0,0,0))
 
+		for button in buttons:
+			#print(len(buttons))
+			button.update()
+
+		screen.blit(logo_image,(screen_size[0]/2-374/2,10))
+
 		pygame.display.flip()
-		clock.tick(40)'''
+		clock.tick(40)
 		
 
-	while not done:
+	while not done and not menuscreen:
 		for event in pygame.event.get():
 			#Event Listeners
 			if event.type == pygame.QUIT:
@@ -189,48 +217,372 @@ def main():
 
 		'''Start of code that spawns in enemies'''
 
-		'''if randint(0,150) == 0:
-			new_sparrow = Sparrow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
-			enemies.append(new_sparrow)
-		if randint(0,300) == 0:
-			new_swallow = Swallow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
-			enemies.append(new_swallow)
-			swallows.append(new_swallow)
-		if randint(0,1600) == 0:
-			new_cardinal = Cardinal(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops")
-			enemies.append(new_cardinal)
-		if randint(0,580) == 0:
-			new_crow = Crow(randint(0,screen_size[0]),-32,"xspeed","yspeed","img","imgno", "fire","hp","points","drops", "mod")
-			enemies.append(new_crow)
-			crows.append(new_crow)'''
+		if score > LEVEL8:
 
-		if randint(0,450) == 0:
-			new_basicline = BasicLine("types", "xoffset", "yoffset", "pos")
-			for i in range(len(new_basicline.types)):
-				new_formation_enemy = new_basicline.types[i](new_basicline.pos+new_basicline.xoffset[i]*i, -64+new_basicline.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
-				enemies.append(new_formation_enemy)
+			if randint(0,9000) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
 
-				if new_formation_enemy.__class__ == Swallow:
-					swallows.append(new_formation_enemy)
-				if new_formation_enemy.__class__ == Crow:
+			if randint(0,580) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
 					crows.append(new_formation_enemy)
 
-		if randint(0,1160) == 0:
-			new_doublecrow = DoubleCrow("types", "xoffset","yoffset","pos")
-			for i in range(len(new_doublecrow.types)):
-				new_formation_enemy = new_doublecrow.types[i](new_doublecrow.pos+new_doublecrow.xoffset[i]*i, -64+new_doublecrow.yoffset[i], "xspeed", "yspeed","img","imgno","fire","hp","formation","points","drops")
-				enemies.append(new_formation_enemy)
+			if randint(0,800) == 0:
+				new_formation = AdvancedWing("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
 
-				if new_formation_enemy.__class__ == Swallow:
-					swallows.append(new_formation_enemy)
-				if new_formation_enemy.__class__ == Crow:
+					if new_formation_enemy.__class__ == SwallowMKII:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,550) == 0:
+				new_formation = SingleCardinal("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,1600) == 0:
+				new_formation = AdvancedLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1000) == 0:
+				new_formation = SingleHawk("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,7800) == 0:
+				new_formation = BatteringRam("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,1000) == 0:
+				new_formation = SupremeLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == SwallowMKII:
+						swallows.append(new_formation_enemy)
+					elif new_formation_enemy.__class__ == Crow:
+						crows.append(new_formation_enemy)
+
+		elif score > LEVEL7:
+
+			if randint(0,4500) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,580) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
 					crows.append(new_formation_enemy)
 
-		if randint(0,1600) == 0:
-			new_singlecardinal = SingleCardinal("types","xoffset","yoffset","pos")
-			for i in range(len(new_singlecardinal.types)):
-				new_formation_enemy = new_singlecardinal.types[i](new_singlecardinal.pos+new_singlecardinal.xoffset[i]*i, -64+new_singlecardinal.yoffset[i], "xspeed", "yspeed", "img","imgno","fire","hp","formation","points","drops")
-				enemies.append(new_formation_enemy)
+			if randint(0,1000) == 0:
+				new_formation = AdvancedWing("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == SwallowMKII:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,600) == 0:
+				new_formation = SingleCardinal("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,600) == 0:
+				new_formation = AdvancedLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1500) == 0:
+				new_formation = SingleHawk("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,8000) == 0:
+				new_formation = BatteringRam("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+		elif score > LEVEL6:
+
+			if randint(0,1800) == 0:
+				new_formation = AdvancedWing("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == SwallowMKII:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,3600) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,3600) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,600) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+					crows.append(new_formation_enemy)
+
+			if randint(0,2500) == 0:
+				new_formation = BlueSquad("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Crow:
+						crows.append(new_formation_enemy)
+
+			if randint(0,600) == 0:
+				new_formation = SingleCardinal("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,700) == 0:
+				new_formation = AdvancedLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1500) == 0:
+				new_formation = SingleHawk("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+		elif score > LEVEL5:
+
+			if randint(0,6000) == 0:
+				new_formation = AdvancedWing("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == SwallowMKII:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1200) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,2500) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,800) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+					crows.append(new_formation_enemy)
+
+			if randint(0,1300) == 0:
+				new_formation = BlueSquad("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Crow:
+						crows.append(new_formation_enemy)
+
+			if randint(0,800) == 0:
+				new_formation = SingleCardinal("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,700) == 0:
+				new_formation = AdvancedLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1800) == 0:
+				new_formation = SingleHawk("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+		elif score > LEVEL4:
+
+			if randint(0,1000) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,500) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,1000) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+					crows.append(new_formation_enemy)
+
+			if randint(0,1800) == 0:
+				new_formation = BlueSquad("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Crow:
+						crows.append(new_formation_enemy)
+
+			if randint(0,1200) == 0:
+				new_formation = SingleCardinal("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,1500) == 0:
+				new_formation = AdvancedLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+		elif score > LEVEL3:
+			
+			if randint(0,1000) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,300) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,550) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+					crows.append(new_formation_enemy)
+
+			if randint(0,800) == 0:
+				new_formation = BlueSquad("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Crow:
+						crows.append(new_formation_enemy)
+
+		elif score > LEVEL2:
+			if randint(0,1000) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,400) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+			if randint(0,600) == 0:
+				new_formation = DoubleCrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+					crows.append(new_formation_enemy)
+
+
+		elif score > LEVEL1:
+			if randint(0,1000) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+			if randint(0,400) == 0:
+				new_formation = BasicLine("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
+
+					if new_formation_enemy.__class__ == Swallow:
+						swallows.append(new_formation_enemy)
+
+		else:
+			if randint(0,200) == 0:
+				new_formation = SingleSparrow("types", "xoffset", "yoffset", "pos")
+				for i in range(len(new_formation.types)):
+					new_formation_enemy = new_formation.types[i](new_formation.pos+new_formation.xoffset[i]*i, -64+new_formation.yoffset[i], "xspeed","yspeed","img","imgno","fire","hp","formation","points","drops")
+					enemies.append(new_formation_enemy)
 
 		'''End of code that spawns in enemies'''
 
@@ -255,6 +607,18 @@ def main():
 			powerups.append(new_powerup)
 
 
+		upgradegen = randint(0,40000)#Spawns in upgrades
+		if upgradegen in range(0,5):
+			new_upgrade = Damage0(randint(0,screen_size[0]),randint(0,screen_size[1]),randint(-2,2),randint(-2,2),
+			"name","images","imgplc")
+			upgrades.append(new_upgrade)
+		elif upgradegen in range(6,10):
+			new_upgrade = Backfire(randint(0,screen_size[0]),randint(0,screen_size[1]),randint(-2,2),randint(-2,2),
+			"name","images","imgplc")
+			upgrades.append(new_upgrade)
+
+
+
 		for power_up in powerups:#This for loop detects collisions between powerups and things
 			if int(my_ship.x*10 - power_up.x*10) in range(-320, 160) and int(my_ship.y*10 - power_up.y*10) in range(-320, 230):
 				power0.play()
@@ -265,12 +629,18 @@ def main():
 				my_ship.powermax = power_up.duration
 				powerups.remove(power_up)
 
+		for upgrade in upgrades:#This loop detects collisions between upgrades and things
+			if int(my_ship.x*10 - upgrade.x*10) in range(-320, 160) and int(my_ship.y*10 - upgrade.y*10) in range(-320, 230):
+				power0.play()
+				my_ship.upgrades.append(upgrade.name)
+				upgrades.remove(upgrade)
+
 		for laser in weapons:#This loop detects collisions between lasers and powerups
 			for power_up in powerups:
 				if laser.x - power_up.x in range(-8,16) and laser.y - power_up.y in range(-16,16):
 					
 					for i in range(0,100):
-						if randint(0,100) < 30:
+						if randint(0,600) < 30:
 							new_GoldCoin = GoldCoin(power_up.x, power_up.y, random()*randint(-2,2), random()*randint(1,2), "coinimg", "imagecount", "imgs", "value")
 							coins.append(new_GoldCoin)
 
@@ -286,7 +656,7 @@ def main():
 						pass
 					else:
 						pass
-					enemy.hp -= 1
+					enemy.hp -= laser.damage
 					damage0.play()
 					if enemy.hp < 1:
 						explosion1.play()
@@ -336,8 +706,8 @@ def main():
 			#if int(coin.x*10) - int(my_ship.x*10) in range(0, 320) and int(coin.y*10) - int(my_ship.y*10) in range(0,320):
 			
 			if int(enemy.x*10) - int(my_ship.x*10) in range(-320, 320) and int(enemy.y*10) - int(my_ship.y*10) in range(-320, 320):
-				my_ship.hp -= enemy.hp*10
-				enemy.hp -= my_ship.hp*10
+				my_ship.hp -= enemy.hp*5
+				enemy.hp -= my_ship.hp*5
 				if enemy.hp < 0:
 					explosion1.play()
 					enemies.remove(enemy)
@@ -368,7 +738,7 @@ def main():
 
 		for new_crow in crows:#This loop allows crows to fire
 			if new_crow.y < my_ship.y:
-				if randint(0, 10) == 0:
+				if randint(0, 20) == 0:
 					new_enemyweapon = StreamG("speed", "weaponimg", new_crow.x, new_crow.y, "damage")
 					laser0.play()
 					enemyweapons.append(new_enemyweapon)
@@ -403,17 +773,17 @@ def main():
 		for i in range(0,len(stars)):
 			pygame.draw.circle(screen,(255,255,255),stars[i],0)
 
-		#Draws ships, enemies, and coins
-		for coin in coins:
+		for coin in coins:#draws coins
 			coin.update()
-			if coin.y < -20 or coin.y > 720:#This conditional removes off-screen coins. X coord is not needed because coins bounce off of the x
+			if coin.y < -20 or coin.y > 720 or coin.x < -20 or coin.x > 1020:#This conditional removes off-screen coins
 				coins.remove(coin)
 				del(coin)
 
-		my_ship.update()
-		for my_weapon in weapons:
+		my_ship.update()#draws the ship
+
+		for my_weapon in weapons:#Draws weapons
 			my_weapon.update()
-			if my_weapon.y < -20:#This conditional checks if a laser is off of the screen and deletes it
+			if my_weapon.y < -20 or my_weapon.y > 1000:#This conditional checks if a laser is off of the screen and deletes it
 				weapons.remove(my_weapon)
 				del(my_weapon)
 
@@ -429,14 +799,20 @@ def main():
 			if new_enemyweapon.y > 700:
 				enemyweapons.remove(new_enemyweapon)
 		
-		for power_up in powerups:
+		for power_up in powerups:#Draws powerups
 			power_up.update()
 			if power_up.y < -20 or power_up.y > 720 or power_up.x < -20 or power_up.x > 1020:
 				powerups.remove(power_up)
 				del(power_up)
 
-		for enemy in enemies:
+		for enemy in enemies:#draws enemies
 			enemy.update()
+
+		for upgrade in upgrades:#draws upgrades
+			upgrade.update()
+			if upgrade.y < -20 or upgrade.y > 720 or upgrade.x < -20 or upgrade.x > 1020:
+				upgrades.remove(upgrade)
+				del(upgrade)
 
 		#Draws the HUD image
 		screen.blit(hud_image,(0,screen_size[1]-100))
