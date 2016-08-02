@@ -10,6 +10,7 @@ class EnemyWeapon(pygame.sprite.Sprite):
 		self.x = x
 		self.y = y
 		self.damage = damage
+		self.generictype = "EnemyWeapon"
 
 
 
@@ -20,6 +21,7 @@ class StreamG(EnemyWeapon):
 		self.x = x + 8
 		self.y = y + 8
 		self.damage = 1
+		self.generictype = "EnemyWeapon"
 
 	def update(self):
 		screen.blit(self.weaponimg,(self.x, self.y))

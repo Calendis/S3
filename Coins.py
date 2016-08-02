@@ -14,6 +14,7 @@ class Coin(pygame.sprite.Sprite):
 		self.imagecount = imagecount
 		self.imgs = imgs
 		self.value = value
+		self.generictype = "Coin"
 
 
 class PlatinumCoin(Coin):
@@ -26,6 +27,7 @@ class PlatinumCoin(Coin):
 		self.imagecount = 0
 		self.imgs = platinumcoinimgs
 		self.value = 150
+		self.generictype = "Coin"
 
 	def update(self):
 		screen.blit(self.imgs[int(self.imagecount)],(self.x, self.y))
@@ -58,6 +60,8 @@ class GoldCoin(Coin):
 		self.imagecount = 0
 		self.imgs = goldcoinimgs
 		self.value = 50
+		self.generictype = "Coin"
+
 
 	def update(self):
 		screen.blit(self.imgs[int(self.imagecount)],(self.x, self.y))
@@ -90,6 +94,8 @@ class SilverCoin(Coin):
 		self.imagecount = 0
 		self.imgs = silvercoinimgs
 		self.value = 10
+		self.generictype = "Coin"
+
 
 	def update(self):
 		screen.blit(self.imgs[int(self.imagecount)],(self.x, self.y))
@@ -122,6 +128,7 @@ class CopperCoin(Coin):
 		self.imagecount = 0
 		self.imgs = coppercoinimgs
 		self.value = 1
+		self.generictype = "Coin"
 
 	def update(self):
 		screen.blit(self.imgs[int(self.imagecount)],(self.x, self.y))

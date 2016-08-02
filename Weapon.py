@@ -32,6 +32,7 @@ class Weapon(pygame.sprite.Sprite):
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.damage = damage
+		self.generictype = "MyWeapon"
 
 class Stream(Weapon):
 	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
@@ -42,6 +43,7 @@ class Stream(Weapon):
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.damage = 1
+		self.generictype = "MyWeapon"
 
 	def update(self):
 		screen.blit(self.weaponimg,(self.x, self.y))
@@ -60,6 +62,7 @@ class GBall(Weapon):
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.damage = 1
+		self.generictype = "MyWeapon"
 
 	def update(self):
 		screen.blit(self.weaponimg,(self.x, self.y))
@@ -79,6 +82,7 @@ class RedStream(Weapon):
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.damage = 2
+		self.generictype = "MyWeapon"
 
 	def update(self):
 		screen.blit(self.weaponimg, (self.x, self.y))

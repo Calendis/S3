@@ -12,9 +12,7 @@ screen = pygame.display.set_mode()
 weapons = []
 
 class Ship(pygame.sprite.Sprite):
-	def __init__(self, x, y, xspeed, yspeed, maxspeed, imgplace, shipimgs, firing,
-		xpowerup, ypowerup, isleft, isright, isdown, isup, hp, can_shoot, time_elapser, fire_delay, overheat,
-		coolantbonus, powerleft, powermax, upgrades, lasertype, backfire):
+	def __init__(self, x, y, maxspeed, xpowerup, ypowerup, lasertype):
 		self.x = x
 		self.y = y
 		self.xspeed = 0
@@ -22,7 +20,7 @@ class Ship(pygame.sprite.Sprite):
 		self.maxspeed = maxspeed
 		self.imgplace = 0
 		self.shipimgs = [broadsword_centre_image, broadsword_right_image, broadsword_left_image]
-		self.firing = firing
+		self.firing = False
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.isleft = False
@@ -40,6 +38,7 @@ class Ship(pygame.sprite.Sprite):
 		self.upgrades = []
 		self.lasertype = lasertype
 		self.backfire = False
+		self.generictype = "Ship"
 
 	def update(self):
 		screen.blit(self.shipimgs[self.imgplace],(self.x,self.y))
@@ -62,11 +61,15 @@ class Ship(pygame.sprite.Sprite):
 		elif self.isdown == False and self.isup != True:
 			self.yspeed = 0
 		if self.isleft == True:
+			if self.x < 5:
+				self.isleft = False
 			self.xspeed = -self.maxspeed
 			self.imgplace = 2
 		elif self.isleft == False and self.isright != True:
 			self.xspeed = 0
 		if self.isright == True:
+			if self.x > 1000-32-5:
+				self.isright = False
 			self.xspeed = self.maxspeed
 			self.imgplace = 1
 		elif self.isright == False and self.isleft != True:
@@ -94,11 +97,13 @@ class Ship(pygame.sprite.Sprite):
 			my_weapon = self.lasertype(0,0,self.x,self.y, self.xpowerup, self.ypowerup, "damage")
 			laser1.play()
 			weapons.append(my_weapon)
+			#allsprites.append(my_weapon)
 			if self.backfire == True:
 				my_weapon_back = self.lasertype("speed", "weaponimg",self.x, self.y, self.xpowerup, self.ypowerup, "damage")
 				my_weapon_back.speed *= -1
 				my_weapon_back.y += 42
 				weapons.append(my_weapon_back)
+				#allsprites.append(my_weapon_back)
 			self.overheat += 2
 			self.powerdrain()
 			self.time_elapser = time()

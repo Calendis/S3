@@ -19,6 +19,7 @@ class Enemy(pygame.sprite.Sprite):
 		self.formation = formation
 		self.points = points
 		self.drops = drops
+		self.generictype = "Enemy"
 
 class Sparrow(Enemy):
 	def __init__(self, x, y, xspeed, yspeed, shipimg, imgno, firing, hp, formation, points, drops):
@@ -33,6 +34,7 @@ class Sparrow(Enemy):
 		self.formation = True
 		self.points = 26
 		self.drops = 0.1
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -57,8 +59,9 @@ class Swallow(Enemy):
 		self.firing = False
 		self.hp = 2
 		self.formation = True
-		self.points = 40
+		self.points = 35
 		self.drops = 0.1
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -93,7 +96,8 @@ class Cardinal(Enemy):
 		self.hp = 20
 		self.formation = True
 		self.points = 50
-		self.drops = 0.2
+		self.drops = 0.3
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -118,8 +122,9 @@ class Crow(Enemy):
 		self.firing = False
 		self.hp = 1
 		self.formation = True
-		self.points = 160
+		self.points = 120
 		self.drops = 0.015
+		self.generictype = "Enemy"
 		global mod
 
 		if randint(0,1) == 0:
@@ -152,14 +157,15 @@ class Bluebird(Enemy):
 		self.x = x
 		self.y = y
 		self.xspeed = 0
-		self.yspeed = 3.5
+		self.yspeed = 5.5
 		self.shipimg = [bluebird_centre_image, bluebird_right_image, bluebird_left_image]
 		self.imgno = 0
 		self.firing = False
-		self.hp = 3
+		self.hp = 4
 		self.formation = True
 		self.points = 77
 		self.drops = 0.05
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -183,8 +189,9 @@ class Hawk(Enemy):
 		self.firing = False
 		self.hp = 2
 		self.formation = True
-		self.points = 100
+		self.points = 200
 		self.drops = 0.03
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -211,8 +218,9 @@ class SwallowMKII(Enemy):
 		self.firing = False
 		self.hp = 4
 		self.formation = True
-		self.points = 80
-		self.drops = 0.2
+		self.points = 280
+		self.drops = 0.02
+		self.generictype = "Enemy"
 
 	def update(self):
 		screen.blit(self.shipimg[self.imgno],(self.x, self.y))
@@ -247,6 +255,7 @@ class Ring(Enemy):
 		self.points = 500
 		self.drops = 0.05
 		self.speedaniplace = 0
+		self.generictype = "Enemy"
 
 		global ringmod
 

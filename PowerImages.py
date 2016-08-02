@@ -28,3 +28,13 @@ pygame.image.load("img/powerups/icei/icei6.png"),
 pygame.image.load("img/powerups/icei/icei7.png"),
 pygame.image.load("img/powerups/icei/icei8.png"),
 pygame.image.load("img/powerups/icei/icei9.png")]
+
+#Images for heal
+healimgs =[pygame.image.load("img/powerups/heal/heal0.png"),
+pygame.image.load("img/powerups/heal/heal1.png"),
+pygame.image.load("img/powerups/heal/heal2.png"),
+pygame.image.load("img/powerups/heal/heal3.png"),
+pygame.image.load("img/powerups/heal/heal4.png"),
+pygame.image.load("img/powerups/heal/heal5.png"),
+pygame.image.load("img/powerups/heal/heal6.png"),
+pygame.image.load("img/powerups/heal/heal7.png")]
