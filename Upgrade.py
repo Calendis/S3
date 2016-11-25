@@ -1,12 +1,14 @@
 #Script for upgrades
 from UpgradeImages import *
 from Weapon import *
+from Entity import *
 screen = pygame.display.set_mode()
 
-class Upgrade(pygame.sprite.Sprite):
+class Upgrade(Entity):
 	def __init__(self):
-		self.x = 0
-		self.y = 0
+		super(Upgrade, self).__init__()
+		self.width = 16
+		self.height = 18
 		self.xspeed = 0
 		self.yspeed = 0
 		self.name = "DEFAULT UPGRADE"

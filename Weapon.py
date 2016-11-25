@@ -1,6 +1,7 @@
 #Classes for lasers and other weapons
 import pygame
 from WeaponImages import *
+from Entity import *
 from math import sin
 from math import tan
 from random import randint
@@ -23,71 +24,81 @@ def y_power_up(ypowerup, x, y):
 
 	return y
 
-class Weapon(pygame.sprite.Sprite):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
-		self.speed = speed
-		self.weaponimg = weaponimg
-		self.x = x
-		self.y = y
-		self.xpowerup = xpowerup
-		self.ypowerup = ypowerup
-		self.damage = damage
-		self.generictype = "MyWeapon"
-
-class Stream(Weapon):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
-		self.speed = 20.0
+class Weapon(Entity):
+	def __init__(self):
+		super(Weapon, self).__init__()
+		self.speed = 0
 		self.weaponimg = stream_image
-		self.x = x + 11
-		self.y = y -14
-		self.xpowerup = xpowerup
-		self.ypowerup = ypowerup
-		self.damage = 1
+		self.xpowerup = "none"
+		self.ypowerup = "none"
+		self.damage = 0
 		self.generictype = "MyWeapon"
+		self.heatmultiplier = 1
 
 	def update(self):
-		screen.blit(self.weaponimg,(self.x, self.y))
+		screen.blit(self.weaponimg, (round(self.x), round(self.y)))
 		self.y -= self.speed
 		self.x = x_power_up(self.xpowerup, self.x, self.y)
 		self.y = y_power_up(self.ypowerup, self.x, self.y)
-		self.x = round(self.x, 1)
-		self.y = round(self.y, 1)
+
+class Stream(Weapon):
+	def __init__(self, x, y, xpowerup, ypowerup):
+		super(Stream, self).__init__()
+		self.width = 10
+		self.height = 14
+		self.speed = 20
+		self.weaponimg = stream_image
+		self.x = x + 11
+		self.y = y - 14
+		self.xpowerup = xpowerup
+		self.ypowerup = ypowerup
+		self.damage = 1
+
+class LightStream(Weapon):
+	"""docstring for LightStream"""
+	def __init__(self, x, y, xpowerup, ypowerup):
+		super(LightStream, self).__init__()
+		self.width = 10
+		self.height = 14
+		self.speed = 20
+		self.weaponimg = lightstream_image
+		self.x = x + 11
+		self.y = y - 14
+		self.xpowerup = xpowerup
+		self.ypowerup = ypowerup
+		self.damage = 0.5
+		self.heatmultiplier = 0.2
 
 class GBall(Weapon):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
-		self.speed = 30.0
+	def __init__(self, x, y, xpowerup, ypowerup):
+		super(GBall, self).__init__()
+		self.width = 8
+		self.height = 8
+		self.speed = 4
 		self.weaponimg = gball_image
 		self.x = x + 12
 		self.y = y - 10
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
-		self.damage = 1
-		self.generictype = "MyWeapon"
+		self.damage = 2
 
 	def update(self):
-		screen.blit(self.weaponimg,(self.x, self.y))
+		screen.blit(self.weaponimg,(round(self.x), round(self.y)))
 		self.y -= self.speed
-		self.x -= int(sin(self.y)*10)
+		#self.x -= int(sin(self.y)*10)
 		self.x = x_power_up(self.xpowerup, self.x, self.y)
 		self.y = y_power_up(self.ypowerup, self.x, self.y)
-		self.x = round(self.x, 1)
-		self.y = round(self.y, 1)
 
 class RedStream(Weapon):
-	def __init__(self, speed, weaponimg, x, y, xpowerup, ypowerup, damage):
-		self.speed = 21.0
+	def __init__(self, x, y, xpowerup, ypowerup):
+		super(RedStream, self).__init__()
+		self.width = 10
+		self.height = 14
+		self.speed = 21
 		self.weaponimg = redstream_image
 		self.x = x + 11
 		self.y = y -14
 		self.xpowerup = xpowerup
 		self.ypowerup = ypowerup
 		self.damage = 2
-		self.generictype = "MyWeapon"
-
-	def update(self):
-		screen.blit(self.weaponimg, (self.x, self.y))
-		self.y -= self.speed
-		self.x = x_power_up(self.xpowerup, self.x, self.y)
-		self.y = y_power_up(self.ypowerup, self.x, self.y)
-		self.x = round(self.x, 1)
-		self.y = round(self.y, 1)
+		self.heatmultiplier = 2

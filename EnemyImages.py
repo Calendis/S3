@@ -36,3 +36,6 @@ swallowmkii_left_image = pygame.image.load("img/ships/enemy/swallowmkii/swallowm
 
 #Ring Boss
 ring_image = pygame.image.load("img/ships/enemy/ring/ring.png")
+
+#Shop
+shop_image = pygame.image.load("img/ships/shop.png")

@@ -1,12 +1,14 @@
 #Classes for power ups
 from PowerImages import *
 from random import randint
+from Entity import *
 screen = pygame.display.set_mode()
 
-class PowerUp(pygame.sprite.Sprite):
+class PowerUp(Entity):
 	def __init__(self):
-		self.x = 0
-		self.y = 0
+		super(PowerUp, self).__init__()
+		self.width = 16
+		self.height = 24
 		self.xspeed = 0
 		self.yspeed = 0
 		self.name = "DEFAULT POWERUP"

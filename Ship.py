@@ -4,6 +4,7 @@ from Weapon import *
 from ShipImages import *
 from WeaponImages import *
 from ShipSoundLoader import *
+from Entity import *
 from Power import PowerUp
 from time import time
 from random import random
@@ -11,10 +12,13 @@ from random import random
 screen = pygame.display.set_mode()
 weapons = []
 
-class Ship(pygame.sprite.Sprite):
+class Ship(Entity):
 	def __init__(self, x, y, maxspeed, xpowerup, ypowerup, lasertype):
+		super(Ship, self).__init__()
 		self.x = x
 		self.y = y
+		self.width = 32
+		self.height = 32
 		self.xspeed = 0
 		self.yspeed = 0
 		self.maxspeed = maxspeed
@@ -94,17 +98,18 @@ class Ship(pygame.sprite.Sprite):
 				self.can_shoot = True
  	
 		if self.can_shoot == True:
-			my_weapon = self.lasertype(0,0,self.x,self.y, self.xpowerup, self.ypowerup, "damage")
+			my_weapon = self.lasertype(self.x,self.y, self.xpowerup, self.ypowerup)
 			laser1.play()
 			weapons.append(my_weapon)
 			#allsprites.append(my_weapon)
 			if self.backfire == True:
-				my_weapon_back = self.lasertype("speed", "weaponimg",self.x, self.y, self.xpowerup, self.ypowerup, "damage")
+				my_weapon_back = self.lasertype(self.x, self.y, self.xpowerup, self.ypowerup)
 				my_weapon_back.speed *= -1
 				my_weapon_back.y += 42
 				weapons.append(my_weapon_back)
-				#allsprites.append(my_weapon_back)
-			self.overheat += 2
+				self.overheat += 2 * my_weapon.heatmultiplier
+				
+			self.overheat += 2 * my_weapon.heatmultiplier
 			self.powerdrain()
 			self.time_elapser = time()
 			self.can_shoot = False
