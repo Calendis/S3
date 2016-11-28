@@ -604,8 +604,8 @@ def main():
 						allsprites.append(new_formation_enemy)
 
 			elif score > LEVEL3 and shop_appeared == False:
-				new_shop = Shop(0, -200)
-				allsprites.append(new_shop)
+				#new_shop = Shop(0, -200)
+				#allsprites.append(new_shop)
 				shop_appeared = "neither"
 
 			elif score > LEVEL2:
