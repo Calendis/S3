@@ -63,7 +63,7 @@ class Shop(Enemy):
 			self.x = -200
 
 	def shop(self):
-		pygame.time.delay(5000)
+		print("have fun shopping")
 
 
 class Sparrow(Enemy):
@@ -74,7 +74,7 @@ class Sparrow(Enemy):
 		self.xspeed = 0
 		self.yspeed = 4
 		self.shipimg = [sparrow_centre_image, sparrow_right_image, sparrow_left_image]
-		self.hp = 1
+		self.hp = 0.2
 		self.points = 26
 		self.drops = 0.1
 		
@@ -87,7 +87,7 @@ class Swallow(Enemy):
 		self.xspeed = 2
 		self.yspeed = 5.5
 		self.shipimg = [swallow_centre_image, swallow_right_image, swallow_left_image]
-		self.hp = 2
+		self.hp = 1.4
 		self.points = 35
 		self.drops = 0.1
 

@@ -12,4 +12,5 @@ laser0 = pygame.mixer.Sound("aud/laser0.wav")
 menu0 = pygame.mixer.Sound("aud/menu0.wav")
 
 music = pygame.mixer.music.load("aud/music.wav")
+pygame.mixer.music.set_volume(0.4)
 pygame.mixer.music.play(-1)

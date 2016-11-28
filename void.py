@@ -104,6 +104,7 @@ def main():
 	crow_elapser = time()
 
 	paused = False
+	shopping = False
 
 	shop_appeared = False
 
@@ -129,6 +130,8 @@ def main():
 
 	scoretext = font.render("Score: "+str(score), 0,(160,160,160))
 	highscoretext = font.render("High Score: "+str(hs_table), 0,(100,200,200))
+
+	pausedtext = font2.render("Game Paused", 0,(255,255,255))
 
 	gameovertext = font2.render("Game Over", 0,(255,255,255))
 
@@ -188,7 +191,7 @@ def main():
 	while True and not done:
 
 
-		while not done and not menuscreen and not paused:
+		while not done and not menuscreen and not paused and not shopping:
 			for event in pygame.event.get():
 				#Input handling
 				if event.type == pygame.QUIT:
@@ -230,7 +233,7 @@ def main():
 					if event.key == K_x:
 						my_ship.firing = False
 						if my_ship.overheat < 44:
-							my_ship.can_shoot = True
+							pass#my_ship.can_shoot = True
 
 			#Game Logic Below. Lots of game logic is stored in the classes as well.
 
@@ -691,7 +694,12 @@ def main():
 
 								explosion1.play()
 								allsprites.remove(other_object)
-								allsprites.remove(laser)
+								try:
+									allsprites.remove(laser)
+								except:
+									pass
+								else:
+									pass
 
 						elif other_object.generictype == "Enemy":
 							if pygame.Rect.colliderect(laser.hitbox, other_object.hitbox) == 1:
@@ -703,7 +711,7 @@ def main():
 									pass
 								other_object.hp -= laser.damage
 								damage0.play()
-								if other_object.hp < 1:
+								if other_object.hp < 0:
 									explosion1.play()
 
 									for i in range(int(other_object.points/(1/other_object.drops)+other_object.formation)):
@@ -898,7 +906,7 @@ def main():
 
 			#Draws game over if game is over
 			if my_ship.hp == -1.3:
-				screen.blit(gameovertext, (screen_size[0]/2, screen_size[1]/2))
+				screen.blit(gameovertext, (screen_size[0]/2-300, screen_size[1]/2))
 
 			pygame.display.flip()
 			clock.tick(40)
@@ -911,7 +919,8 @@ def main():
 					if event.key == K_p:
 						paused = togglepause(paused)
 
-			screen.fill((0,0,0))
+			#screen.fill((0,0,0))
+			screen.blit(pausedtext, (screen_size[0]/2-200, screen_size[1]/2-70))
 			pygame.display.flip()
 			clock.tick(40)
 
@@ -921,6 +930,8 @@ def main():
 					done = True
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					pass
+					for shopitem in shopitems:
+						pass
 
 			screen.fill((100,100,100))
 	

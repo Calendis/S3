@@ -35,6 +35,7 @@ class Ship(Entity):
 		self.can_shoot = True
 		self.time_elapser = 0
 		self.fire_delay = 0.3
+		self.original_fire_delay = self.fire_delay
 		self.overheat = 0
 		self.coolantbonus = 0
 		self.powerleft = 0
@@ -93,7 +94,7 @@ class Ship(Entity):
 
 
 	def fire(self):
-		if time() - self.time_elapser >= self.fire_delay:
+		if time() - self.time_elapser >= self.fire_delay * self.lasertype(0,0,0,0).delaymultiplier:
 			if self.overheat < 44:
 				self.can_shoot = True
  	
@@ -101,7 +102,6 @@ class Ship(Entity):
 			my_weapon = self.lasertype(self.x,self.y, self.xpowerup, self.ypowerup)
 			laser1.play()
 			weapons.append(my_weapon)
-			#allsprites.append(my_weapon)
 			if self.backfire == True:
 				my_weapon_back = self.lasertype(self.x, self.y, self.xpowerup, self.ypowerup)
 				my_weapon_back.speed *= -1
@@ -128,11 +128,12 @@ class Ship(Entity):
 				depower0.play()
 				self.xpowerup = "none"
 				self.coolantbonus = 0
-				self.fire_delay = 0.3
+				self.fire_delay = self.original_fire_delay
 				self.powerleft = 0
 				self.powermax = 1
 
 	def die(self):
+		self.hp = -1.3
 		explosion0.play()
 		self.overheat = 44	
 		self.coolantbonus = -0.1
