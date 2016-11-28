@@ -40,7 +40,7 @@ class Ship(Entity):
 		self.coolantbonus = 0
 		self.powerleft = 0
 		self.powermax = 1
-		self.upgrades = []
+		self.upgrades = [False,False]
 		self.lasertype = lasertype
 		self.backfire = False
 		self.generictype = "Ship"
@@ -86,11 +86,38 @@ class Ship(Entity):
 		self.x = round(self.x, 1)
 		self.y = round(self.y, 1)
 
-		for upgrade in self.upgrades:
+		'''for upgrade in self.upgrades:
 			if upgrade == "damage0":
 				self.lasertype = RedStream
 			if upgrade == "backfire":
-				self.backfire = True
+				self.backfire = True'''
+
+		if self.upgrades[0] == "damage0":
+			self.lasertype = RedStream
+		elif self.upgrades[0] == "light":
+			self.lasertype = LightStream
+		elif self.upgrades[0] == "revolver":
+			self.lasertype = Revolver
+		elif self.upgrades[0] == "revolver2":
+			self.lasertype = RevolverMkII
+		elif self.upgrades[0] == "telsa":
+			self.lasertype = Tesla
+		elif self.upgrades[0] == "shrap":
+			self.lasertype = ShrapnelBlaster
+		elif self.upgrades[0] == "shrap2":
+			self.lasertype = HotShrapnelBlaster
+		elif self.upgrades[0] == "gball":
+			self.lasertype = GBall
+		elif self.upgrades[0] == "hpball":
+			self.lasertype = HPBall
+		elif self.upgrades[0] == "blaser":
+			self.lasertype = BLaser
+		elif self.upgrades[0] == "stream":
+			self.lasertype = Stream
+
+		if self.upgrades[1] == "backfire":
+			self.backfire = True
+
 
 
 	def fire(self):

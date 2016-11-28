@@ -841,7 +841,10 @@ def main():
 
 					if pygame.Rect.colliderect(sprite.hitbox, my_ship.hitbox) == 1:
 						power0.play()
-						my_ship.upgrades.append(sprite.name)
+						if sprite.spectype == "damage0":
+							my_ship.upgrades[0]=sprite.name
+						elif sprite.spectype == "backfire":
+							my_ship.upgrades[1]=sprite.name
 						allsprites.remove(sprite)
 
 				elif sprite.generictype == "Enemy":

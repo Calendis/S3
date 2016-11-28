@@ -2,6 +2,7 @@
 from UpgradeImages import *
 from Weapon import *
 from Entity import *
+from random import randint
 screen = pygame.display.set_mode()
 
 class Upgrade(Entity):
@@ -39,9 +40,11 @@ class Damage0(Upgrade):
 		self.y = y
 		self.xspeed = xspeed
 		self.yspeed = yspeed
-		self.name = "damage0"
+		#self.name = "damage0"
+		self.name = ["damage0","light","revolver","revolver2","tesla","shrap","shrap2","gball","hpball","blaser","stream"][randint(0,10)]
 		self.images = [damage0_image_0,damage0_image_1,damage0_image_2,damage0_image_3,damage0_image_4,damage0_image_5,damage0_image_6,damage0_image_7]
 		self.imgplc = 0
+		self.spectype = "damage0"
 
 class Backfire(Upgrade):
 	def __init__(self, x, y, xspeed, yspeed):
@@ -53,3 +56,4 @@ class Backfire(Upgrade):
 		self.name = "backfire"
 		self.images = [backfire_image_0, backfire_image_1, backfire_image_2, backfire_image_3, backfire_image_4, backfire_image_5]
 		self.imgplc = 0
+		self.spectype = "backfire"
