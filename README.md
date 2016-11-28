@@ -3,3 +3,9 @@
 Requires pygame and shelve to be installed for python 3.
 
 run void.py
+
+
+
+MOVE: ARROW KEYS
+SHOOT: X
+PAUSE: P
