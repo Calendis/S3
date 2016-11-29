@@ -8,11 +8,11 @@ class Button():
 	def __init__(self):
 		self.x = 0
 		self.y = 0
-		self.images = []
+		self.images = [clickme_default, clickme_hover, clickme_pressed]
 		self.img_count = 0
 		self.hovered = False
-		self.width = 0
-		self.height = 0
+		self.width = 92
+		self.height = 21
 
 	def update(self):
 		screen.blit(self.images[self.img_count], (self.x, self.y))
@@ -40,3 +40,11 @@ class PlayButton(Button):
 		self.images = [play_default, play_hover, play_pressed]
 		self.width = 88
 		self.height = 28
+
+class ExitButton(Button):
+	"""docstring for ExitButton"""
+	def __init__(self, x, y):
+		super(ExitButton, self).__init__()
+		self.x = x
+		self.y = y
+		

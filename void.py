@@ -95,7 +95,23 @@ def healthbar_metre_control(integer1):
 
 	return integer1
 
+def leveltransition():
+	leveltext = font2.render("Level "+str(level),0,(255,255,255))
+
+
 def main():
+	global level1shopping
+	global level2shopping
+	global level3shopping
+	global level4shopping
+	global level5shopping
+	global level6shopping
+	global level7shopping
+	global level8shopping
+	global level9shopping
+	global level10shopping
+	global level11shopping
+
 	done = False
 	menuscreen = True
 
@@ -105,8 +121,6 @@ def main():
 
 	paused = False
 	shopping = False
-
-	shop_appeared = False
 
 	global allsprites
 	allsprites = []
@@ -121,6 +135,8 @@ def main():
 	play_button = PlayButton(100, 200)
 	buttons.append(play_button)
 
+	exit_button = ExitButton(screen_size[0]-20,screen_size[1]-10)
+
 	score = 0
 	try:
 		hs_table = shelve.open("highscores.sav")
@@ -129,11 +145,13 @@ def main():
 		hs_table = 0
 
 	scoretext = font.render("Score: "+str(score), 0,(160,160,160))
-	highscoretext = font.render("High Score: "+str(hs_table), 0,(100,200,200))
+	highscoretext = font.render("High Score: "+str(hs_table), 0,(160,160,160))
 
-	pausedtext = font2.render("Game Paused", 0,(255,255,255))
+	pausedtext = font2.render("Paused", 0,(255,255,255))
 
 	gameovertext = font2.render("Game Over", 0,(255,255,255))
+
+	shoptext = font2.render("Shop", 0,(255,255,255))
 
 	global my_ship
 	my_ship = Ship(screen_size[0]/2, screen_size[1]*0.6, 3.0, "none", "none", Stream)
@@ -156,6 +174,9 @@ def main():
 	UPGRADE_TYPES = [Damage0, Backfire]
 
 	SHOW_HITBOXES = False
+
+	global level
+	level = 0
 
 	for i in range (0,STARCOUNT):
 		star_x = randint(0,screen_size[0])
@@ -191,7 +212,7 @@ def main():
 	while True and not done:
 
 
-		while not done and not menuscreen and not paused and not shopping:
+		while not done and not menuscreen and not paused:# and not shopping:
 			for event in pygame.event.get():
 				#Input handling
 				if event.type == pygame.QUIT:
@@ -249,7 +270,11 @@ def main():
 
 			'''Start of code that spawns in enemies'''
 
-			if score > LEVEL8:
+			if score in range(LEVEL8,LEVEL9):
+				level = 8
+				if level8shopping == False:
+					level8shopping = True
+					shopping = True
 
 				if randint(0,9000) == 0:
 					new_formation = SingleSparrow()
@@ -313,7 +338,11 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL7:
+			elif score in range(LEVEL7,LEVEL8):
+				level = 7
+				if level7shopping == False:
+					level7shopping = True
+					shopping = True
 
 				if randint(0,4500) == 0:
 					new_formation = SingleSparrow()
@@ -370,7 +399,11 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL6:
+			elif score in range(LEVEL6,LEVEL7):
+				level = 6
+				if level6shopping == False:
+					level6shopping = True
+					shopping = True
 
 				if randint(0,1800) == 0:
 					new_formation = AdvancedWing()
@@ -441,7 +474,11 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL5:
+			elif score in range(LEVEL5,LEVEL6):
+				level = 5
+				if level5shopping == False:
+					level5shopping = True
+					shopping = True
 
 				if randint(0,6000) == 0:
 					new_formation = AdvancedWing()
@@ -512,7 +549,11 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL4:
+			elif score in range(LEVEL4,LEVEL5):
+				level = 4
+				if level4shopping == False:
+					level4shopping = True
+					shopping = True
 
 				if randint(0,1000) == 0:
 					new_formation = SingleSparrow()
@@ -566,7 +607,11 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL3 and shop_appeared == True:
+			elif score in range(LEVEL3,LEVEL4):
+				level = 3
+				if level3shopping == False:
+					level3shopping = True
+					shopping = True
 
 				if randint(0,1000) == 0:
 					new_formation = SingleSparrow()
@@ -603,12 +648,12 @@ def main():
 
 						allsprites.append(new_formation_enemy)
 
-			elif score > LEVEL3 and shop_appeared == False:
-				#new_shop = Shop(0, -200)
-				#allsprites.append(new_shop)
-				shop_appeared = "neither"
+			elif score in range(LEVEL2,LEVEL3):
+				level = 2
+				if level2shopping == False:
+					level2shopping = True
+					#shopping = True
 
-			elif score > LEVEL2:
 				if randint(0,1000) == 0:
 					new_formation = SingleSparrow()
 					for i in range(len(new_formation.types)):
@@ -635,7 +680,13 @@ def main():
 						allsprites.append(new_formation_enemy)
 
 
-			elif score > LEVEL1:
+			elif score in range(LEVEL1,LEVEL2):
+				level = 1
+				if level1shopping == False:
+					level1shopping = True
+					#shopping = True (I have turned this off, because there's no point in shopping at so few coins)
+
+				#leveltransition()
 				if randint(0,1000) == 0:
 					new_formation = SingleSparrow()
 					for i in range(len(new_formation.types)):
@@ -879,13 +930,6 @@ def main():
 							my_ship.die()
 							highscore(hs_table, score)
 
-				elif sprite.generictype == "Shop":
-					if pygame.Rect.colliderect(sprite.hitbox, my_ship.hitbox) == 1:
-						shopping = True
-
-						#shop_appeared = True
-
-
 			#Draws the HUD image
 			screen.blit(hud_image,(0,screen_size[1]-100))
 
@@ -909,7 +953,7 @@ def main():
 
 			#Draws game over if game is over
 			if my_ship.hp == -1.3:
-				screen.blit(gameovertext, (screen_size[0]/2-300, screen_size[1]/2))
+				screen.blit(gameovertext, (screen_size[0]/2-9*15, screen_size[1]/2))
 
 			pygame.display.flip()
 			clock.tick(40)
@@ -923,20 +967,24 @@ def main():
 						paused = togglepause(paused)
 
 			#screen.fill((0,0,0))
-			screen.blit(pausedtext, (screen_size[0]/2-200, screen_size[1]/2-70))
+			screen.blit(pausedtext, (screen_size[0]/2-6*15, screen_size[1]/2-70))
 			pygame.display.flip()
 			clock.tick(40)
 
-		while shopping and not done and not paused:
+		while False and shopping and not done and not paused:
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
 					done = True
 				if event.type == pygame.MOUSEBUTTONDOWN:
 					pass
-					for shopitem in shopitems:
-						pass
 
+			#Drawing below
 			screen.fill((100,100,100))
+			screen.blit(shoptext, (screen_size[x]-4*15, 30))
+			exit_button.update()
+			pygame.display.flip()
+
+			clock.tick(40)
 	
 	if done:
 		print("Quitting...")
